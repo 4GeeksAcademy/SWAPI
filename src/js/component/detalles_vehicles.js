@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Context } from "../store/appContext";
 
-const Detalles_vehicles = () => {
+const Detalles_characters = () => {
     const { uid } = useParams();
     const { store, actions } = useContext(Context);
     const [vehicle, setVehicle] = useState(null); // Cambiado a 'setVehicle'
@@ -62,4 +62,4 @@ const Detalles_vehicles = () => {
     );
 };
 
-export default Detalles_vehicles;
+export default Detalles_characters;

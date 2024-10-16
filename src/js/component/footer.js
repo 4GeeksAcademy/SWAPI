@@ -24,11 +24,6 @@ export const Footer = (props) => (
                         >
                             {item.geeksName}
                         </a>
-                        <img 
-                            className="imgfooter" 
-                            src={item.imagenURL} 
-                            alt="Logo de 4GeeksAcademy" 
-                        />
                     </p>
                 </footer>
             ))}
