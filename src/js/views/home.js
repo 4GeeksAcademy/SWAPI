@@ -1,15 +1,28 @@
-import React from "react";
-import rigoImage from "../../img/rigo-baby.jpg";
+import React, { useEffect, useContext } from "react";
 import "../../styles/home.css";
+import Characters from "../component/characters";
+import Planets from "../component/planets";
+import Vehicles from "../component/vehicles";
+import { Context } from "../store/appContext";
 
-export const Home = () => (
-	<div className="text-center mt-5">
-		<h1>Hello Rigo!</h1>
-		<p>
-			<img src={rigoImage} />
-		</p>
-		<a href="#" className="btn btn-success">
-			If you see this green button, bootstrap is working
-		</a>
-	</div>
-);
+
+export const Home = () => {
+    const { store, actions } = useContext(Context);
+
+    useEffect(() => {
+        actions.getPeople();
+        actions.getPlanets();
+        actions.getVehicles();
+    }, []);
+
+    return (
+        <div className="container justify-content-center">
+            <h1 className="titleMain">Characters</h1>
+            <Characters />
+            <h1 className="titleMain">Planets</h1>
+            <Planets />
+            <h1 className="titleMain">Vehicles</h1>
+            <Vehicles />
+        </div>
+    );
+};
