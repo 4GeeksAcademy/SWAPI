@@ -13,12 +13,12 @@
 .favorite-button {
     border-color: #ffc107;
     color: #ffc107;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: background-color 1s ease, color 1s ease;
 }
 
 .favorite-button .heart-icon {
     color: #ffc107;
-    transition: color 0.3s ease;
+    transition: color 1s ease;
 }
 
 .favorite-button:hover {
@@ -27,7 +27,7 @@
 }
 
 .favorite-button:hover .heart-icon {
-    color: #000; /* Líneas oscuras en hover */
+    color: #000; 
 }
 
 .favorite-button.active {
@@ -36,13 +36,13 @@
 }
 
 .favorite-button.active .heart-icon {
-    color: #ffc107; /* Relleno blanco cuando el corazón está activado */
+    color: #ffc107; 
 }
 
 .favorite-button.active:hover {
-    background-color: #000; /* Fondo oscuro cuando se activa */
+    background-color: #000; 
 }
 
 .favorite-button.active:hover .heart-icon {
-    color: #fff; /* Mantiene el color blanco en hover si está activado */
+    color: #fff; 
 }

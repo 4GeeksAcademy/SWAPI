@@ -1,16 +1,16 @@
 :root {
-  background-color: white;
+  background-color: white !important;
 }
 
 .overflow-container{
-    width: 100%; /* Puedes ajustar el tamaño que desees */
-    max-width: 95vw; /* Controla el ancho máximo del contenedor */
-    height: 500px; /* Controla la altura del contenedor */
-    overflow-x: auto; /* Permite el scroll horizontal si las cards sobrepasan el ancho */
-    overflow-y: hidden; /* Oculta el desbordamiento vertical */
-    display: flex; /* Flexbox para alinear las cards en fila */
-    gap: 15px; /* Espaciado entre las cards */
+    width: 100%; 
+    max-width: 95vw; 
+    height: 500px; 
+    overflow-x: auto; 
+    overflow-y: hidden; 
+    display: flex; 
+    gap: 15px; 
     padding: 10px;
-    background-color: #f0f0f0; /* Fondo para visualizar el contenedor */
+    background-color: #f0f0f0; 
     margin: auto;
   }

@@ -5,7 +5,7 @@ import { Context } from "../store/appContext.js";
 import {
     characterBodyBuilder,
     planetBodyBuilder,
-    filmsBodyBuilder,
+    vehiclesBodyBuilder,
 } from "../Functions/CardBuilder.js";
 
 const BASEURL = "https://www.swapi.tech/api/people";
@@ -24,13 +24,13 @@ export const Home = () => {
                     </div>
                 ) : (
                     store.peopleDetails.map((result, index) => {
-                        let characterBody = characterBodyBuilder(result);  // Cambié body a characterBody
+                        let characterBody = characterBodyBuilder(result);  
                         return (
                             <InfoCard
                                 key={index}
                                 title={result.properties.name}
                                 uid={result.uid}
-                                body={characterBody} // Usando characterBody aquí
+                                body={characterBody} 
                                 type="characters"
                                 eyeColor={result.properties.eye_color}
                                 hairColor={result.properties.hair_color}
@@ -46,32 +46,32 @@ export const Home = () => {
                 {store.planets.length <= 0
                     ? "Cargando Contenido"
                     : store.planetsDetails.map((result, index) => {
-                        let planetBody = planetBodyBuilder(result);  // Cambié body a planetBody
+                        let planetBody = planetBodyBuilder(result);  
                         return (
                             <InfoCard
                                 key={index}
                                 title={result.properties.name}
                                 uid={result.uid}
-                                body={planetBody} // Usando planetBody aquí
+                                body={planetBody} 
                                 type="planets"
                             />
                         );
                     })}
             </div>
 
-            <h1 className="text-danger bold ms-3"> Films</h1>
+            <h1 className="text-danger bold ms-3"> Vehicles</h1> 
             <div className="overflow-container mb-3">
-                {store.filmsDetails.length <= 0
+                {store.vehiclesDetails.length <= 0
                     ? "Cargando Contenido"
-                    : store.filmsDetails.map((result, index) => {
-                        let filmBody = filmsBodyBuilder(result);  // Cambié body a filmBody
+                    : store.vehiclesDetails.map((result, index) => {
+                        let vehicleBody = vehiclesBodyBuilder(result);  
                         return (
                             <InfoCard
                                 key={index}
-                                title={result.properties.title}
+                                title={result.properties.name} 
                                 uid={result.uid}
-                                body={filmBody} // Usando filmBody aquí
-                                type="films"
+                                body={vehicleBody} 
+                                type="vehicles" 
                             />
                         );
                     })}

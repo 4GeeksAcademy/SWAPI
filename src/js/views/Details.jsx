@@ -89,35 +89,39 @@ const Details = () => {
 					</div>
 				</>
 			);
-		} else if (type === "films") {
-			const { title, director, producer, release_date, episode_id } =
-				data.properties;
+		} else if (type === "vehicles") {  
+			const { name, model, manufacturer, cost_in_credits, crew, passengers } = data.properties;
 			return (
 				<>
 					<div className="col">
-						<strong>Title</strong>
+						<strong>Name</strong>
 						<br />
-						{title}
+						{name}
 					</div>
 					<div className="col">
-						<strong>Director</strong>
+						<strong>Model</strong>
 						<br />
-						{director}
+						{model}
 					</div>
 					<div className="col">
-						<strong>Producer</strong>
+						<strong>Manufacturer</strong>
 						<br />
-						{producer}
+						{manufacturer}
 					</div>
 					<div className="col">
-						<strong>Release Date</strong>
+						<strong>Cost in Credits</strong>
 						<br />
-						{release_date}
+						{cost_in_credits}
 					</div>
 					<div className="col">
-						<strong>Episode</strong>
+						<strong>Crew</strong>
 						<br />
-						{episode_id}
+						{crew}
+					</div>
+					<div className="col">
+						<strong>Passengers</strong>
+						<br />
+						{passengers}
 					</div>
 				</>
 			);
@@ -134,7 +138,7 @@ const Details = () => {
 			(detalles) => detalles.uid === id
 		);
 		console.log(obj[0]);
-		setData(obj[0] || {}); // Asegúrate de que siempre sea un objeto
+		setData(obj[0] || {}); 
 		setIsLoading(false);
 	}, [type, id, store]);
 

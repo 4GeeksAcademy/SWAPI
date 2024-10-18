@@ -5,13 +5,12 @@ const getState = ({ getStore, getActions, setStore }) => {
 		store: {
 			loading: false,
 			favorites: [],
-			people: [
-
-			],
+			people: [],
 			planets: [],
+			vehicles: [],
 			peopleDetails: [],
-			filmsDetails: [],
-			planetsDetails: []
+			planetsDetails: [],
+			vehiclesDetails: []
 		},
 		actions: {
 			makeRequest: async (noun) => {
@@ -46,16 +45,16 @@ const getState = ({ getStore, getActions, setStore }) => {
 					throw error;
 				}
 			},
-			getFilms: async () => {
-				const actions = getActions();
-				try {
-					// Hacemos la solicitud y obtenemos los datos (ya sea desde la API o localStorage)
-					const data = await actions.makeRequest("films");
-					setStore({ filmsDetails: data });
-
-				} catch (error) {
-					console.error("Error fetching films: " + error);
-				}
+			getVehicles: async () => {  
+                const actions = getActions();
+                try {
+                    // Hacemos la solicitud y obtenemos los datos (ya sea desde la API o localStorage)
+                    const data = await actions.makeRequest("vehicles");
+                    setStore({ vehicles: data });
+                    actions.fetchDetails("vehicles");
+                } catch (error) {
+                    console.error("Error fetching Vehicles: " + error);
+                }
 			},
 			getCharacters: async () => {
 				const actions = getActions();

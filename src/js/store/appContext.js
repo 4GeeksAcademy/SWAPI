@@ -36,7 +36,7 @@ const injectContext = PassedComponent => {
 					await Promise.all([
 						state.actions.getCharacters(),
 						state.actions.getPlanets(),
-						state.actions.getFilms(),
+						state.actions.getVehicles(),
 					]);
 				} catch (error) {
 					console.error("Error fetching data:", error);
