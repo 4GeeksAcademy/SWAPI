@@ -30,7 +30,7 @@ const FavoritesButton = ({ favorites, onDelete }) => {
                   {favorite.title}
                 </Link>
                 <button
-                  className="btn btn-danger m-1"
+                  className="btn m-1"
                   onClick={() => onDelete(favorite.uid, favorite.type)}
                 >
                   <svg
