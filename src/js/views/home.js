@@ -13,25 +13,24 @@ const BASEURL = "https://www.swapi.tech/api/people";
 export const Home = () => {
     const { store, actions } = useContext(Context);
     return (
-        <div className="text-start mt-5 ">
+        <div className="text-start mt-5">
             <h1 className="text-danger bold ms-3"> Characters</h1>
             <div className="overflow-container mb-3">
                 {store.loading ? (
                     <div className="container-fluid d-flex justify-content-center align-items-center">
-                        {" "}
                         <div className="spinner-grow text-danger" role="status" style={{ width: "150px", height: "150px" }}>
                             <span className="visually-hidden">Loading...</span>
                         </div>
                     </div>
                 ) : (
                     store.peopleDetails.map((result, index) => {
-  https://github.com/4GeeksAcademy/react-hello-webapp                      let body = characterBodyBuilder(result);
+                        let characterBody = characterBodyBuilder(result);  // Cambié body a characterBody
                         return (
                             <InfoCard
                                 key={index}
                                 title={result.properties.name}
                                 uid={result.uid}
-                                body={body}
+                                body={characterBody} // Usando characterBody aquí
                                 type="characters"
                                 eyeColor={result.properties.eye_color}
                                 hairColor={result.properties.hair_color}
@@ -41,35 +40,37 @@ export const Home = () => {
                     })
                 )}
             </div>
+
             <h1 className="text-danger bold ms-3"> Planets</h1>
             <div className="overflow-container mb-3">
                 {store.planets.length <= 0
                     ? "Cargando Contenido"
                     : store.planetsDetails.map((result, index) => {
-                        let body = planetBodyBuilder(result);
+                        let planetBody = planetBodyBuilder(result);  // Cambié body a planetBody
                         return (
                             <InfoCard
                                 key={index}
                                 title={result.properties.name}
                                 uid={result.uid}
-                                body={body}
+                                body={planetBody} // Usando planetBody aquí
                                 type="planets"
                             />
                         );
                     })}
             </div>
+
             <h1 className="text-danger bold ms-3"> Films</h1>
             <div className="overflow-container mb-3">
                 {store.filmsDetails.length <= 0
                     ? "Cargando Contenido"
                     : store.filmsDetails.map((result, index) => {
-                        let body = filmsBodyBuilder(result);
+                        let filmBody = filmsBodyBuilder(result);  // Cambié body a filmBody
                         return (
                             <InfoCard
                                 key={index}
                                 title={result.properties.title}
                                 uid={result.uid}
-                                body={body}
+                                body={filmBody} // Usando filmBody aquí
                                 type="films"
                             />
                         );
