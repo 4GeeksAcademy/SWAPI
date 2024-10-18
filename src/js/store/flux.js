@@ -1,130 +1,138 @@
+const BASEURL = "https://www.swapi.tech/api"
+
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
-			demo: [],
-			people: [],
-			vehicles: [],
-			planets: [],
+			loading: false,
 			favorites: [],
-			error: null,
+			people: [
+
+			],
+			planets: [],
+			peopleDetails: [],
+			filmsDetails: [],
+			planetsDetails: []
 		},
 		actions: {
-			addFavorite: (item) => {
-				console.log("Adding favorite:", item);
-				const store = getStore();
-				setStore({"favorites": [...store.favorites,item]});
-			},
-			removeFavorite: (item) => {
-				console.log("Removing favorite with uid:", item);
-				const store = getStore();
-				let newFavorites = store.favorites.filter((fav) => !(fav.uid == item.uid && fav.type == item.type))
-				setStore({"favorites": newFavorites});
-			},
-			
-			getPeople: async () => {
-				const store = getStore();
-				const setError = (errorMessage) => setStore({ error: errorMessage });
-			
-				try {
-					const responses = await Promise.all(
-						Array.from({ length: 5 }, (_, i) =>
-							fetch(`https://www.swapi.tech/api/people/${i + 1}`)
-						)
-					);
-			
-					const results = await Promise.all(
-						responses.map(response => {
-							if (response.status === 200) {
-								return response.json().then(data => ({
-									...data.result.properties,
-									uid: data.result.uid,
-									description: data.result.description,
-								}));
-							} else {
-								return null; // Manejar errores como quieras
-							}
-						})
-					);
-			
-					// Filtrar los resultados nulos
-					const people = results.filter(person => person !== null);
-					console.log(people)
-					setStore({ people });
-				} catch (error) {
-					console.error("Error fetching data:", error);
-					setError("Error al conectar con la API.");
+			makeRequest: async (noun) => {
+				const store = getStore()
+				const storage = window.localStorage;
+				// Revisamos si ya hay datos en el localStorage
+				if (storage.getItem(noun)) {
+					console.log(`Se ha conseguido información de ${noun} en el Local Storage`);
+					let data = storage.getItem(noun);
+					let parsedData = JSON.parse(data);
+					setStore({ [noun]: parsedData });
+					return parsedData;
 				}
-			},
-			
-			getVehicles: async () => {
-				const store = getStore();
-				const setError = (errorMessage) => setStore({ error: errorMessage });
-			
-				try {
-					const responses = await Promise.all(
-						Array.from({ length: 15 }, (_, i) =>
-							fetch(`https://www.swapi.tech/api/starships/${i + 1}`)
-						)
-					);
-			
-					const results = await Promise.all(
-						responses.map(response => {
-							if (response.ok) {
-								return response.json().then(data => ({
-									...data.result.properties,
-									uid: data.result.uid,
-									description: data.result.description,
-								}));
-							} else {
-								console.error(`Error fetching vehicle: ${response.status}`);
-								return null;
-							}
-						})
-					);
-			
-					// Filtrar los resultados nulos
-					const vehicles = results.filter(vehicle => vehicle !== null);
-					console.log(vehicles);
-					setStore({ vehicles });
-				} catch (error) {
-					console.error("Error fetching data:", error);
-					setError("Error al conectar con la API.");
-				}
-			},
-			
 
-			getPlanets: async () => {
-				const store = getStore();
-				const setError = (errorMessage) => setStore({ error: errorMessage });
-			
+				if (!store.loading) {
+					setStore({ loading: true })
+				}
+				// Si no hay datos en el Local Storage, hacemos la solicitud a la API
 				try {
-					const responses = await Promise.all(
-						Array.from({ length: 5 }, (_, i) =>
-							fetch(`https://www.swapi.tech/api/planets/${i + 1}`)
-						)
-					);
-					const results = await Promise.all(
-						responses.map(response => {
-							if (response.status === 200) {
-								return response.json().then(data => ({
-									...data.result.properties,
-									uid: data.result.uid,
-									description: data.result.description,
-								}));
-							} else {
-								return null; // Manejar errores como quieras
-							}
-						})
-					);
-					// Filtrar los resultados nulos
-					const planets = results.filter(planet => planet !== null);
-					console.log(planets)
-					setStore({ planets });
+					const response = await fetch(`${BASEURL}/${noun}`);
+					if (response.ok) {
+						let data = await response.json();
+						// Guardamos los datos en el localStorage usando la clave dinámica
+						storage.setItem(noun, JSON.stringify(data.result || data.results));
+						setStore({ loading: false })
+						return data.result || data.results;
+					} else {
+						throw Error(`Error: ${response.status} - ${response.statusText}`);
+					}
 				} catch (error) {
-					console.error("Error fetching data:", error);
-					setError("Error al conectar con la API.");
+					console.error(error);
+					throw error;
 				}
 			},
+			getFilms: async () => {
+				const actions = getActions();
+				try {
+					// Hacemos la solicitud y obtenemos los datos (ya sea desde la API o localStorage)
+					const data = await actions.makeRequest("films");
+					setStore({ filmsDetails: data });
+
+				} catch (error) {
+					console.error("Error fetching films: " + error);
+				}
+			},
+			getCharacters: async () => {
+				const actions = getActions();
+				try {
+					// Hacemos la solicitud y obtenemos los datos (ya sea desde la API o localStorage)
+					const data = await actions.makeRequest("people");
+					setStore({ people: data });
+					actions.fetchDetails("people");
+				} catch (error) {
+					console.error("Error fetching Characters: " + error);
+				}
+			},
+			fetchDetails: async (storeInfo) => {
+				const urlExtractor = (item) => item.url
+
+				const store = getStore()
+				const storage = window.localStorage
+				if (storage.getItem(`${storeInfo}Details`)) {
+					let details = storage.getItem(`${storeInfo}Details`)
+					let parsedDetails = JSON.parse(details)
+					setStore({ [`${storeInfo}Details`]: parsedDetails })
+					return
+				}
+
+				const detailPromises = store[storeInfo].map(async (item) => {
+					try {
+						const response = await fetch(urlExtractor(item));
+						if (response.ok) {
+							const data = await response.json();
+							return data.result; // Aquí obtienes las propiedades 
+						} else {
+							throw new Error(`Error ${response.status} - ${response.statusText}`);
+						}
+					} catch (error) {
+						console.error(error);
+					}
+				});
+
+				// Resolviendo todas las promesas y actualizando el estado
+				const resolvedDetails = await Promise.all(detailPromises);
+				setStore({ [`${storeInfo}Details`]: resolvedDetails });
+				storage.setItem(`${storeInfo}Details`, JSON.stringify(resolvedDetails))
+			},
+			getPlanets: async () => {
+				const actions = getActions();
+				const storage = window.localStorage;
+
+
+				if (storage.getItem("planets")) {
+					console.log("Se ha conseguido información de planets en el Local Storage");
+					let data = storage.getItem("planets");
+					let parsedData = JSON.parse(data);
+					setStore({ planets: parsedData });
+					actions.fetchDetails("planets");
+					return;
+				}
+
+				try {
+					const data = await actions.makeRequest("planets");
+					setStore({ planets: data });
+					actions.fetchDetails("planets");
+				} catch (error) {
+					console.log(error);
+				}
+			},
+			addFavorite: (favorite) => {
+				const store = getStore()
+				setStore({ favorites: [...store.favorites, favorite] })
+			},
+			removeFavorite: (id, type) => {
+				const store = getStore()
+				setStore({
+					...store,
+					favorites: store.favorites.filter(fav => !(fav.uid === id && fav.type === type))
+				});
+			}
+
 		}
 	};
 };

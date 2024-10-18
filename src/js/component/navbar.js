@@ -1,48 +1,34 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
-import { Context } from "../store/appContext";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import logo from "../../img/StarWarsLogo.png";
+import FavoritesButton from "./FavoritesButton.jsx";
+import { Context } from "../store/appContext.js";
 
 export const Navbar = () => {
-    const { store, actions } = useContext(Context);
+  const { store, actions } = useContext(Context);
 
-    return (
-        <nav className="navbar navbar-light bg-light mb-3 container-fluid">
-            <div className="container d-flex align-items-center">
-                <Link to="/">
-                    <img
-                        src="https://www.barullo.com/blog-disfraces/wp-content/uploads/2018/11/logo-star-wars-300x169.png"
-                        alt="Starwars"
-                        className="navbar-brand"
-                        style={{ maxHeight: '50px', height: 'auto' }}
-                    />
-                </Link>
-                <ul className="nav nav-pills ms-auto">
-                    <li className="nav-item dropdown">
-                        <a className="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
-                        Favorites <span className={`badge ${store.favorites.length > 0 ? 'bg-danger' : 'bg-secondary'}`}>{store.favorites.length}</span>
-                        </a>
-                        <ul className="dropdown-menu">
-                            {store.favorites.length === 0 ? (
-                                <li className="dropdown-item">empty</li>
-                            ) : (
-                                store.favorites.map(favorite => (
-                                    <li className="dropdown-item text-primary" key={`${favorite.uid}-${favorite.name}`}>
-                                        {favorite.name}
-                                        <button 
-                                            className="btn btn-link" 
-                                            onClick={() => actions.removeFavorite(favorite)}
-                                        >
-                                            <FontAwesomeIcon className="text-black" icon={faTrash} />
-                                        </button>
-                                    </li>
-                                ))
-                            )}
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-    );
+  const handleFavoriteRemove = (uid, type) => {
+    actions.removeFavorite(uid, type)
+  }
+
+  return (
+    <nav className="navbar navbar-light bg-light mb-3">
+      <div className="container-fluid d-flex justify-content-between">
+        <div>
+          <Link to="/" className="m-auto">
+            <span className="navbar-brand mb-0 h1 ms-5">
+              <img
+                src={logo}
+                style={{ maxWidth: "80px" }}
+                alt="StarWars Logo"
+              />
+            </span>
+          </Link>
+        </div>
+        <div className="me-5">
+          <FavoritesButton favorites={store.favorites} onDelete={handleFavoriteRemove} />
+        </div>
+      </div>
+    </nav>
+  );
 };
